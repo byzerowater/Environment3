@@ -15,11 +15,13 @@
  */
 package com.zerowater.environment.data.source
 
+import com.zerowater.environment.data.Result
+import com.zerowater.environment.data.Version
+
 /**
- * Main entry point for accessing data.
+ * Main entry point for accessing tasks data.
  */
-interface PreferencesDataSource {
-    fun getAuthToken(): String
-    fun putAuthToken(authToken: String)
+interface RemoteDataSource {
+    suspend fun getVersion(): Result<Version>
 
 }

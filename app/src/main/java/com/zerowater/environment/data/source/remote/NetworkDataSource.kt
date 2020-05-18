@@ -17,7 +17,7 @@ package com.zerowater.environment.data.source.remote
 
 import com.zerowater.environment.data.Result
 import com.zerowater.environment.data.Version
-import com.zerowater.environment.data.source.NetworkDataSource
+import com.zerowater.environment.data.source.RemoteDataSource
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -25,10 +25,10 @@ import kotlinx.coroutines.withContext
 /**
  * Implementation of the data source that adds a latency simulating network.
  */
-class RemoteDataSource internal constructor(
+class NetworkDataSource internal constructor(
         private val networkService: NetworkService,
         private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
-) : NetworkDataSource {
+) : RemoteDataSource {
 
     override suspend fun getVersion(): Result<Version> = withContext(ioDispatcher) {
         try {

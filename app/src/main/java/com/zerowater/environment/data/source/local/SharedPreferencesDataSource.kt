@@ -15,7 +15,7 @@
  */
 package com.zerowater.environment.data.source.local
 
-import com.zerowater.environment.data.source.PreferencesDataSource
+import com.zerowater.environment.data.source.LocalDataSource
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 
@@ -25,10 +25,10 @@ import kotlinx.coroutines.Dispatchers
 
 private const val AUTH_TOKEN: String = "authToken"
 
-class LocalPreferencesDataSource internal constructor(
+class SharedPreferencesDataSource internal constructor(
         private val sharedPreferences: SharedPreferencesCache,
         private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
-) : PreferencesDataSource {
+) : LocalDataSource {
 
     override fun getAuthToken(): String = sharedPreferences.getString(AUTH_TOKEN)
     override fun putAuthToken(authToken: String) = sharedPreferences.put(AUTH_TOKEN, authToken)

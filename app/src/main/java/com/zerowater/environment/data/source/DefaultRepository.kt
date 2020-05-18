@@ -25,8 +25,8 @@ import javax.inject.Inject
  * Default implementation of [Repository]. Single entry point for managing data.
  */
 class DefaultRepository @Inject constructor(
-        private val remoteDataSource: NetworkDataSource,
-        private val localPreferencesDataSource: PreferencesDataSource,
+        private val remoteDataSource: RemoteDataSource,
+        private val localDataSource: LocalDataSource,
         private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : Repository {
     override suspend fun getVersion(): Result<Version> {
@@ -34,11 +34,11 @@ class DefaultRepository @Inject constructor(
     }
 
     override fun getAuthToken(): String {
-        return localPreferencesDataSource.getAuthToken()
+        return localDataSource.getAuthToken()
     }
 
     override fun putAuthToken(authToken: String) {
-        localPreferencesDataSource.putAuthToken(authToken)
+        localDataSource.putAuthToken(authToken)
     }
 
 

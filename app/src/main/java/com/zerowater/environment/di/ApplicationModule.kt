@@ -23,13 +23,13 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.zerowater.environment.BuildConfig
 import com.zerowater.environment.data.source.DefaultRepository
-import com.zerowater.environment.data.source.NetworkDataSource
-import com.zerowater.environment.data.source.PreferencesDataSource
+import com.zerowater.environment.data.source.LocalDataSource
+import com.zerowater.environment.data.source.RemoteDataSource
 import com.zerowater.environment.data.source.Repository
-import com.zerowater.environment.data.source.local.LocalPreferencesDataSource
 import com.zerowater.environment.data.source.local.SharedPreferencesCache
+import com.zerowater.environment.data.source.local.SharedPreferencesDataSource
+import com.zerowater.environment.data.source.remote.NetworkDataSource
 import com.zerowater.environment.data.source.remote.NetworkService
-import com.zerowater.environment.data.source.remote.RemoteDataSource
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -68,19 +68,19 @@ class ApplicationModule {
     fun provideRemoteDataSource(
             networkService: NetworkService,
             ioDispatcher: CoroutineDispatcher
-    ): NetworkDataSource {
-        return RemoteDataSource(
+    ): RemoteDataSource {
+        return NetworkDataSource(
                 networkService, ioDispatcher
         )
     }
 
     @Singleton
     @Provides
-    fun provideTasksLocalDataSource(
+    fun provideLocalDataSource(
             sharedPreferences: SharedPreferencesCache,
             ioDispatcher: CoroutineDispatcher
-    ): PreferencesDataSource {
-        return LocalPreferencesDataSource(
+    ): LocalDataSource {
+        return SharedPreferencesDataSource(
                 sharedPreferences, ioDispatcher
         )
     }
@@ -178,7 +178,7 @@ class ApplicationModule {
     @Singleton
     @Provides
     @Named("headerInterceptor")
-    fun provideHeaderInterceptor(context: Context, localPreferencesDataSource: PreferencesDataSource): Interceptor {
+    fun provideHeaderInterceptor(context: Context, localDataSource: LocalDataSource): Interceptor {
         return Interceptor { chain: Interceptor.Chain ->
             val original = chain.request()
             val headers = original.headers
