@@ -22,7 +22,14 @@ import kotlinx.coroutines.Dispatchers
 /**
  * Concrete implementation of a data source as a db.
  */
+
+private const val AUTH_TOKEN: String = "authToken"
+
 class LocalPreferencesDataSource internal constructor(
         private val sharedPreferences: SharedPreferencesCache,
         private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
-) : PreferencesDataSource
+) : PreferencesDataSource {
+
+    override fun getAuthToken(): String = sharedPreferences.getString(AUTH_TOKEN)
+    override fun putAuthToken(authToken: String) = sharedPreferences.put(AUTH_TOKEN, authToken)
+}

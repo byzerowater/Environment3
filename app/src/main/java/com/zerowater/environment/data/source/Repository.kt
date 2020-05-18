@@ -25,4 +25,7 @@ import com.zerowater.environment.data.Version
 interface Repository {
     suspend fun getVersion(): Result<Version>
 
+    fun getAuthToken(): String
+
+    fun putAuthToken(authToken: String)
 }

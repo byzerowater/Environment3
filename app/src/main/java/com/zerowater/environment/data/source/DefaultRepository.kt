@@ -33,5 +33,13 @@ class DefaultRepository @Inject constructor(
         return remoteDataSource.getVersion()
     }
 
+    override fun getAuthToken(): String {
+        return localPreferencesDataSource.getAuthToken()
+    }
+
+    override fun putAuthToken(authToken: String) {
+        localPreferencesDataSource.putAuthToken(authToken)
+    }
+
 
 }

@@ -18,4 +18,8 @@ package com.zerowater.environment.data.source
 /**
  * Main entry point for accessing data.
  */
-interface PreferencesDataSource
+interface PreferencesDataSource {
+    fun getAuthToken(): String
+    fun putAuthToken(authToken: String)
+
+}
