@@ -17,7 +17,6 @@
 package com.zerowater.environment.di
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.net.ConnectivityManager
 import android.os.Build
 import com.google.gson.Gson
@@ -28,6 +27,7 @@ import com.zerowater.environment.data.source.NetworkDataSource
 import com.zerowater.environment.data.source.PreferencesDataSource
 import com.zerowater.environment.data.source.Repository
 import com.zerowater.environment.data.source.local.LocalPreferencesDataSource
+import com.zerowater.environment.data.source.local.SharedPreferencesCache
 import com.zerowater.environment.data.source.remote.NetworkService
 import com.zerowater.environment.data.source.remote.RemoteDataSource
 import dagger.Binds
@@ -42,12 +42,26 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import timber.log.Timber
 import java.io.IOException
+import java.security.SecureRandom
+import java.security.cert.CertificateException
+import java.security.cert.X509Certificate
 import javax.inject.Named
 import javax.inject.Singleton
+import javax.net.ssl.SSLContext
+import javax.net.ssl.TrustManager
+import javax.net.ssl.X509TrustManager
 
+
+/**
+ * Environment
+ * Class: ApplicationModule
+ * Created by ZERO on 2020-05-18.
+ * zero company Ltd
+ * byzerowater@gmail.com
+ * Description: Dagger module for the Application.
+ */
 @Module(includes = [ApplicationModuleBinds::class])
 class ApplicationModule {
-
 
     @Singleton
     @Provides
@@ -63,7 +77,7 @@ class ApplicationModule {
     @Singleton
     @Provides
     fun provideTasksLocalDataSource(
-            sharedPreferences: SharedPreferences,
+            sharedPreferences: SharedPreferencesCache,
             ioDispatcher: CoroutineDispatcher
     ): PreferencesDataSource {
         return LocalPreferencesDataSource(
@@ -73,9 +87,7 @@ class ApplicationModule {
 
     @Singleton
     @Provides
-    fun provideSharedPreferences(context: Context): SharedPreferences {
-        return context.getSharedPreferences("test", Context.MODE_PRIVATE)
-    }
+    fun provideSharedPreferences(context: Context): SharedPreferencesCache = SharedPreferencesCache(context, "test")
 
     @Singleton
     @Provides
@@ -97,12 +109,11 @@ class ApplicationModule {
     @Singleton
     @Provides
     fun provideRetrofit(gson: Gson, okHttpClient: OkHttpClient, @Named("baseUrl") baseUrl: String): NetworkService {
-        return Retrofit.Builder()
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .baseUrl(baseUrl)
-                .client(okHttpClient)
-                .build()
-                .create(NetworkService::class.java)
+        return Retrofit.Builder().apply {
+            addConverterFactory(GsonConverterFactory.create(gson))
+            baseUrl(baseUrl)
+            client(okHttpClient)
+        }.build().create(NetworkService::class.java)
     }
 
     /**
@@ -118,11 +129,42 @@ class ApplicationModule {
     fun provideOkHttpClient(@Named("httpLoggingInterceptor") httpLoggingInterceptor: Interceptor,
                             @Named("headerInterceptor") headerInterceptor: Interceptor,
                             @Named("networkCheckInterceptor") networkCheckInterceptor: Interceptor): OkHttpClient {
-        return OkHttpClient.Builder()
-                .addInterceptor(httpLoggingInterceptor)
-                .addInterceptor(headerInterceptor)
-                .addInterceptor(networkCheckInterceptor)
-                .build()
+
+        return OkHttpClient.Builder().apply {
+            addInterceptor(httpLoggingInterceptor)
+            addInterceptor(headerInterceptor)
+            addInterceptor(networkCheckInterceptor)
+            try {
+                // Create a trust manager that does not validate certificate chains
+                val trustAllCerts = arrayOf<TrustManager>(
+                        object : X509TrustManager {
+                            @Throws(CertificateException::class)
+                            override fun checkClientTrusted(chain: Array<X509Certificate>, authType: String) {
+                            }
+
+                            @Throws(CertificateException::class)
+                            override fun checkServerTrusted(chain: Array<X509Certificate>, authType: String) {
+                            }
+
+                            override fun getAcceptedIssuers(): Array<X509Certificate> {
+                                return arrayOf()
+                            }
+                        }
+                )
+
+                // Install the all-trusting trust manager
+                val sslContext = SSLContext.getInstance("SSL")
+                sslContext.init(null, trustAllCerts, SecureRandom())
+
+                // Create an ssl socket factory with our all-trusting manager
+                val sslSocketFactory = sslContext.socketFactory
+                if (sslSocketFactory != null && trustAllCerts != null && trustAllCerts.size > 0) {
+                    sslSocketFactory(sslSocketFactory, trustAllCerts[0] as X509TrustManager)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }.build()
     }
 
 

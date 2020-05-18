@@ -18,12 +18,22 @@ package com.zerowater.environment.ui.splash
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.zerowater.environment.data.Result
+import com.zerowater.environment.data.Result.Success
 import com.zerowater.environment.data.Version
 import com.zerowater.environment.data.source.Repository
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
- * ViewModel for the Details screen.
+ * Environment
+ * Class: SplashViewModel
+ * Created by ZERO on 2020-05-18.
+ * zero company Ltd
+ * byzerowater@gmail.com
+ * Description: ViewModel for the Splash screen.
  */
 class SplashViewModel @Inject constructor(
         private val repository: Repository
@@ -34,4 +44,21 @@ class SplashViewModel @Inject constructor(
 
     private val _dataLoading = MutableLiveData<Boolean>()
     val dataLoading: LiveData<Boolean> = _dataLoading
+
+    fun getVersion() {
+        viewModelScope.launch {
+            repository.getVersion().let {
+                delay(2000L)
+                _version.value = computeResult(it)
+            }
+        }
+    }
+
+    private fun computeResult(versionResult: Result<Version>): Version? {
+        return if (versionResult is Success) {
+            versionResult.data
+        } else {
+            null
+        }
+    }
 }

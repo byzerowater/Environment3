@@ -20,6 +20,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.zerowater.environment.R
@@ -28,7 +29,12 @@ import dagger.android.support.DaggerFragment
 import javax.inject.Inject
 
 /**
- * Main UI for the splash screen.
+ * Environment
+ * Class: SplashFragment
+ * Created by ZERO on 2020-05-18.
+ * zero company Ltd
+ * byzerowater@gmail.com
+ * Description: Main for the Splash screen.
  */
 class SplashFragment : DaggerFragment() {
     private lateinit var viewDataBinding: SplashFragBinding
@@ -49,13 +55,14 @@ class SplashFragment : DaggerFragment() {
             viewmodel = viewModel
             lifecycleOwner = this@SplashFragment.viewLifecycleOwner
         }
-        setHasOptionsMenu(true)
         return view
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        navigateToLogin()
+
+        viewModel.version.observe(viewLifecycleOwner, Observer { navigateToLogin() })
+        viewModel.getVersion()
     }
 
     private fun navigateToLogin() {

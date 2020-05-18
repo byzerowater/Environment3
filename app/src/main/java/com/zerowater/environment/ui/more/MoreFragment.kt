@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.zerowater.environment.ui.login
+package com.zerowater.environment.ui.more
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -22,25 +22,25 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import com.zerowater.environment.R
-import com.zerowater.environment.databinding.LoginFragBinding
+import com.zerowater.environment.databinding.MoreFragBinding
 import dagger.android.support.DaggerFragment
 import javax.inject.Inject
 
 /**
  * Environment
- * Class: LoginFragment
+ * Class: MoreFragment
  * Created by ZERO on 2020-05-18.
  * zero company Ltd
  * byzerowater@gmail.com
- * Description: Main UI for the login screen.
+ * Description: Main UI for the more screen.
  */
-class LoginFragment : DaggerFragment() {
-    private lateinit var viewDataBinding: LoginFragBinding
+class MoreFragment : DaggerFragment() {
+    private lateinit var viewDataBinding: MoreFragBinding
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private val viewModel by viewModels<LoginViewModel> { viewModelFactory }
+    private val viewModel by viewModels<MoreViewModel> { viewModelFactory }
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -48,10 +48,10 @@ class LoginFragment : DaggerFragment() {
             savedInstanceState: Bundle?
     ): View? {
 
-        val view = inflater.inflate(R.layout.login_frag, container, false)
-        viewDataBinding = LoginFragBinding.bind(view).apply {
+        val view = inflater.inflate(R.layout.more_frag, container, false)
+        viewDataBinding = MoreFragBinding.bind(view).apply {
             viewmodel = viewModel
-            lifecycleOwner = this@LoginFragment.viewLifecycleOwner
+            lifecycleOwner = this@MoreFragment.viewLifecycleOwner
         }
         return view
     }

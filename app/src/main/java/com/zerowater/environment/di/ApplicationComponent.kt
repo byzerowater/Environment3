@@ -25,9 +25,12 @@ import dagger.android.support.AndroidSupportInjectionModule
 import javax.inject.Singleton
 
 /**
- * Main component for the application.
- *
- * See the `TestApplicationComponent` used in UI tests.
+ * Environment
+ * Class: ApplicationComponent
+ * Created by ZERO on 2020-05-18.
+ * zero company Ltd
+ * byzerowater@gmail.com
+ * Description: Main component for the application.
  */
 @Singleton
 @Component(
@@ -36,7 +39,10 @@ import javax.inject.Singleton
             AndroidSupportInjectionModule::class,
             SplashModule::class,
             LoginModule::class,
-            MainModule::class
+            MainModule::class,
+            HomeModule::class,
+            HistoryModule::class,
+            MoreModule::class
         ])
 interface ApplicationComponent : AndroidInjector<EnvironmentApplication> {
 

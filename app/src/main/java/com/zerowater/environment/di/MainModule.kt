@@ -25,7 +25,12 @@ import dagger.android.ContributesAndroidInjector
 import dagger.multibindings.IntoMap
 
 /**
- * Dagger module for the Main feature.
+ * Environment
+ * Class: MainModule
+ * Created by ZERO on 2020-05-18.
+ * zero company Ltd
+ * byzerowater@gmail.com
+ * Description: Dagger module for the Main feature.
  */
 @Module
 abstract class MainModule {

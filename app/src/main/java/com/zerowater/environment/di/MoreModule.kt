@@ -17,8 +17,8 @@
 package com.zerowater.environment.di
 
 import androidx.lifecycle.ViewModel
-import com.zerowater.environment.ui.splash.SplashFragment
-import com.zerowater.environment.ui.splash.SplashViewModel
+import com.zerowater.environment.ui.more.MoreFragment
+import com.zerowater.environment.ui.more.MoreViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
@@ -26,22 +26,22 @@ import dagger.multibindings.IntoMap
 
 /**
  * Environment
- * Class: SplashModule
+ * Class: MoreModule
  * Created by ZERO on 2020-05-18.
  * zero company Ltd
  * byzerowater@gmail.com
- * Description: Dagger module for the Splash feature.
+ * Description: Dagger module for the More feature.
  */
 @Module
-abstract class SplashModule {
+abstract class MoreModule {
 
     @ContributesAndroidInjector(modules = [
         ViewModelBuilder::class
     ])
-    internal abstract fun splashFragment(): SplashFragment
+    internal abstract fun moreFragment(): MoreFragment
 
     @Binds
     @IntoMap
-    @ViewModelKey(SplashViewModel::class)
-    abstract fun bindViewModel(viewmodel: SplashViewModel): ViewModel
+    @ViewModelKey(MoreViewModel::class)
+    abstract fun bindViewModel(viewmodel: MoreViewModel): ViewModel
 }

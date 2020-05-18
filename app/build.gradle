@@ -18,11 +18,21 @@ android {
 
     buildTypes {
 
-        def debugBaseUrl = { path -> "\"debug/api/$path\"" }
-        def releaseBaseUrl = { path -> "\"release/api/$path\"" }
+        def devBaseUrl = { path -> "\"https://baseurl/$path\"" }
+        def stageBaseUrl = { path -> "\"https://baseurl/$path\"" }
+        def releaseBaseUrl = { path -> "\"https://baseurl/$path\"" }
 
         debug {
-            buildConfigField "String", "BASE_URL", debugBaseUrl("")
+            buildConfigField "String", "BASE_URL", devBaseUrl("")
+
+            debuggable true
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            testProguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguardTest-rules.pro'
+        }
+
+        stage {
+            buildConfigField "String", "BASE_URL", stageBaseUrl("")
 
             debuggable true
             minifyEnabled false

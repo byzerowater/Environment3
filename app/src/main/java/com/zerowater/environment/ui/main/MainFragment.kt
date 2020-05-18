@@ -23,11 +23,18 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import com.zerowater.environment.R
 import com.zerowater.environment.databinding.MainFragBinding
+import com.zerowater.environment.ui.home.HomeFragment
+import com.zerowater.environment.util.addFragment
 import dagger.android.support.DaggerFragment
 import javax.inject.Inject
 
 /**
- * Main UI for the main screen.
+ * Environment
+ * Class: MainFragment
+ * Created by ZERO on 2020-05-18.
+ * zero company Ltd
+ * byzerowater@gmail.com
+ * Description: Main UI for the main screen.
  */
 class MainFragment : DaggerFragment() {
     private lateinit var viewDataBinding: MainFragBinding
@@ -46,12 +53,14 @@ class MainFragment : DaggerFragment() {
         val view = inflater.inflate(R.layout.main_frag, container, false)
         viewDataBinding = MainFragBinding.bind(view).apply {
             viewmodel = viewModel
-            viewmodel = viewModel
             lifecycleOwner = this@MainFragment.viewLifecycleOwner
         }
-
-        setHasOptionsMenu(true)
         return view
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        addFragment(R.id.container, HomeFragment())
     }
 
 }

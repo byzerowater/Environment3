@@ -23,7 +23,12 @@ import com.zerowater.environment.data.source.Repository
 import javax.inject.Inject
 
 /**
- * ViewModel for the Details screen.
+ * Environment
+ * Class: MainViewModel
+ * Created by ZERO on 2020-05-18.
+ * zero company Ltd
+ * byzerowater@gmail.com
+ * Description: ViewModel for the main screen.
  */
 class MainViewModel @Inject constructor(
         private val repository: Repository
@@ -34,4 +39,5 @@ class MainViewModel @Inject constructor(
 
     private val _dataLoading = MutableLiveData<Boolean>()
     val dataLoading: LiveData<Boolean> = _dataLoading
+
 }

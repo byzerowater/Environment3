@@ -20,7 +20,12 @@ import androidx.appcompat.app.AppCompatActivity
 import com.zerowater.environment.R
 
 /**
- * Main activity for the todoapp. Holds the Navigation Host Fragment and the Drawer, Toolbar, etc.
+ * Environment
+ * Class: MainActivity
+ * Created by ZERO on 2020-05-18.
+ * zero company Ltd
+ * byzerowater@gmail.com
+ * Description: Main activity for the environment app. Holds the Navigation Host Fragment.
  */
 class MainActivity : AppCompatActivity() {
 

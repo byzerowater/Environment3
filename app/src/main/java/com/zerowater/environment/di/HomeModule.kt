@@ -17,8 +17,8 @@
 package com.zerowater.environment.di
 
 import androidx.lifecycle.ViewModel
-import com.zerowater.environment.ui.splash.SplashFragment
-import com.zerowater.environment.ui.splash.SplashViewModel
+import com.zerowater.environment.ui.home.HomeFragment
+import com.zerowater.environment.ui.home.HomeViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
@@ -26,22 +26,22 @@ import dagger.multibindings.IntoMap
 
 /**
  * Environment
- * Class: SplashModule
+ * Class: HomeModule
  * Created by ZERO on 2020-05-18.
  * zero company Ltd
  * byzerowater@gmail.com
- * Description: Dagger module for the Splash feature.
+ * Description: Dagger module for the Home feature.
  */
 @Module
-abstract class SplashModule {
+abstract class HomeModule {
 
     @ContributesAndroidInjector(modules = [
         ViewModelBuilder::class
     ])
-    internal abstract fun splashFragment(): SplashFragment
+    internal abstract fun homeFragment(): HomeFragment
 
     @Binds
     @IntoMap
-    @ViewModelKey(SplashViewModel::class)
-    abstract fun bindViewModel(viewmodel: SplashViewModel): ViewModel
+    @ViewModelKey(HomeViewModel::class)
+    abstract fun bindViewModel(viewmodel: HomeViewModel): ViewModel
 }

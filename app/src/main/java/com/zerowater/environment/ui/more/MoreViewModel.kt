@@ -13,42 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.zerowater.environment.ui.login
+package com.zerowater.environment.ui.more
 
-import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.zerowater.environment.data.Version
 import com.zerowater.environment.data.source.Repository
-import com.zerowater.environment.util.findNavController
 import javax.inject.Inject
 
 /**
  * Environment
- * Class: LoginViewModel
+ * Class: MoreViewModel
  * Created by ZERO on 2020-05-18.
  * zero company Ltd
  * byzerowater@gmail.com
- * Description: ViewModel for the login screen.
+ * Description: ViewModel for the more screen.
  */
-class LoginViewModel @Inject constructor(
+class MoreViewModel @Inject constructor(
         private val repository: Repository
 ) : ViewModel() {
 
-    private val _version = MutableLiveData<Version>()
-    val version: LiveData<Version> = _version
-
     private val _dataLoading = MutableLiveData<Boolean>()
     val dataLoading: LiveData<Boolean> = _dataLoading
-
-    fun login(view: View) {
-        navigateToMain(view)
-    }
-
-    private fun navigateToMain(view: View) {
-        val action = LoginFragmentDirections
-                .actionMain()
-        findNavController(view).navigate(action)
-    }
 }

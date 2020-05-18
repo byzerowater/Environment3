@@ -13,16 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.zerowater.environment.data.source.local
-
-import com.zerowater.environment.data.source.PreferencesDataSource
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
+package com.zerowater.environment.util
 
 /**
- * Concrete implementation of a data source as a db.
+ * Extension functions and Binding Adapters.
  */
-class LocalPreferencesDataSource internal constructor(
-        private val sharedPreferences: SharedPreferencesCache,
-        private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
-) : PreferencesDataSource
+
+import android.view.View
+import androidx.lifecycle.ViewModel
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
+
+fun ViewModel.findNavController(view: View): NavController = Navigation.findNavController(view)
