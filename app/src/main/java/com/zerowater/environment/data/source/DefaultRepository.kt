@@ -15,7 +15,9 @@
  */
 package com.zerowater.environment.data.source
 
+import com.zerowater.environment.data.Auth
 import com.zerowater.environment.data.Result
+import com.zerowater.environment.data.Token
 import com.zerowater.environment.data.Version
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -27,19 +29,44 @@ import javax.inject.Inject
 class DefaultRepository @Inject constructor(
         private val remoteDataSource: RemoteDataSource,
         private val localDataSource: LocalDataSource,
+        private val resourceDataSource: ResourceDataSource,
         private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : Repository {
     override suspend fun getVersion(): Result<Version> {
         return remoteDataSource.getVersion()
     }
 
-    override fun getAuthToken(): String {
+    override suspend fun getAuthToken(auth: Auth): Result<Token> {
+        return remoteDataSource.getAuthToken(auth).apply {
+            if (this is Result.Success) {
+                localDataSource.putAuthToken(this.data.accessToken)
+            }
+        }
+    }
+
+    override fun getAuthToken(): String? {
         return localDataSource.getAuthToken()
     }
 
-    override fun putAuthToken(authToken: String) {
-        localDataSource.putAuthToken(authToken)
+    override fun getNetworkOperatorName(): String? {
+        return resourceDataSource.getNetworkOperatorName()
     }
 
+    override fun getUDID(): String? {
+        if (localDataSource.getUDID().isNullOrBlank()) {
+            resourceDataSource.getUDID()?.let {
+                localDataSource.putUDID(it)
+            }
+        }
+        return localDataSource.getUDID()
+    }
+
+    override fun isIgnoringBatteryOptimizations(): Boolean {
+        return resourceDataSource.isIgnoringBatteryOptimizations()
+    }
+
+    override fun checkSelfPermission(): Boolean {
+        return resourceDataSource.checkSelfPermission()
+    }
 
 }

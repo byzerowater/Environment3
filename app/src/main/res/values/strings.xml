@@ -17,4 +17,33 @@
 <resources>
     <string name="app_name">Environment</string>
 
+    <!--스플레쉬-->
+    <string name="_text_version">Version %s</string>
+
+    <!--업데이트-->
+    <string name="text_update_guide">새버전이 업데이트 후 사용 가능합니다.\n업데이트를 누르면 앱스토어로 이동합니다.</string>
+    <string name="text_late">나중에</string>
+    <string name="text_update">업데이트</string>
+    <string name="text_immediately_update">지금 업데이트</string>
+
+    <!--로그인-->
+    <string name="text_login_name_hint"><![CDATA[<font color=#bbbbc9>이름(한글/영문만 입력)</font> <font color=#40ae8f>*</font>]]></string>
+    <string name="text_login_phone_hint"><![CDATA[<font color=#bbbbc9>휴대폰(숫자만 입력)</font> <font color=#40ae8f>*</font>]]></string>
+    <string name="text_login">로그인</string>
+
+    <!--메인-->
+    <string name="text_home">홈</string>
+
+    <!--권한-->
+    <string name="text_confirm">확인</string>
+    <string name="text_permission_guide">권한 안내 문구</string>
+
+    <!--기록-->
+    <string name="text_work_history">기록</string>
+    <string name="text_dialog">다이얼로그</string>
+
+    <!--더보기-->
+    <string name="text_more">더보기</string>
+
+
 </resources>

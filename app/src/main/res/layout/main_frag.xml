@@ -20,6 +20,8 @@
 
     <data>
 
+        <import type="com.zerowater.environment.ui.main.MainViewModel.MainNavigation" />
+
         <variable
             name="viewmodel"
             type="com.zerowater.environment.ui.main.MainViewModel" />
@@ -34,36 +36,58 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintBottom_toTopOf="@id/home"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <Button
             android:id="@+id/home"
             android:layout_width="0dp"
             android:layout_height="63dp"
+            android:gravity="center"
+            android:onClick="@{() -> viewmodel.navigation(MainNavigation.HOME)}"
+            android:orientation="vertical"
+            android:selected="@{MainNavigation.HOME.equals(viewmodel.navigation.peekContent)}"
+            android:text="@string/text_home"
+            android:textColor="@color/black_13132b_ff"
+            android:textSize="12sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/history"
             app:layout_constraintHorizontal_weight="1"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/history" />
 
         <Button
             android:id="@+id/history"
             android:layout_width="0dp"
             android:layout_height="63dp"
+            android:gravity="center"
+            android:onClick="@{() -> viewmodel.navigation(MainNavigation.HISTORY)}"
+            android:orientation="vertical"
+            android:selected="@{MainNavigation.HISTORY.equals(viewmodel.navigation.peekContent)}"
+            android:text="@string/text_work_history"
+            android:textColor="@color/black_13132b_ff"
+            android:textSize="12sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/more"
             app:layout_constraintHorizontal_weight="1"
-            app:layout_constraintStart_toEndOf="@+id/home" />
+            app:layout_constraintLeft_toRightOf="@+id/home"
+            app:layout_constraintRight_toLeftOf="@+id/more" />
+
 
         <Button
             android:id="@+id/more"
             android:layout_width="0dp"
             android:layout_height="63dp"
+            android:gravity="center"
+            android:onClick="@{() -> viewmodel.navigation(MainNavigation.MORE)}"
+            android:orientation="vertical"
+            android:selected="@{MainNavigation.MORE.equals(viewmodel.navigation.peekContent)}"
+            android:text="@string/text_more"
+            android:textColor="@color/black_13132b_ff"
+            android:textSize="12sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_weight="1"
-            app:layout_constraintStart_toEndOf="@+id/history" />
+            app:layout_constraintLeft_toRightOf="@+id/history"
+            app:layout_constraintRight_toRightOf="parent" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

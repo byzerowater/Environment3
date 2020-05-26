@@ -18,18 +18,17 @@ package com.zerowater.environment.di
 
 import android.content.Context
 import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.os.Build
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.zerowater.environment.BuildConfig
-import com.zerowater.environment.data.source.DefaultRepository
-import com.zerowater.environment.data.source.LocalDataSource
-import com.zerowater.environment.data.source.RemoteDataSource
-import com.zerowater.environment.data.source.Repository
+import com.zerowater.environment.data.source.*
 import com.zerowater.environment.data.source.local.SharedPreferencesCache
 import com.zerowater.environment.data.source.local.SharedPreferencesDataSource
 import com.zerowater.environment.data.source.remote.NetworkDataSource
 import com.zerowater.environment.data.source.remote.NetworkService
+import com.zerowater.environment.data.source.resource.ContextDataSource
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -87,7 +86,17 @@ class ApplicationModule {
 
     @Singleton
     @Provides
-    fun provideSharedPreferences(context: Context): SharedPreferencesCache = SharedPreferencesCache(context, "test")
+    fun provideResourceDataSource(
+            context: Context
+    ): ResourceDataSource {
+        return ContextDataSource(
+                context
+        )
+    }
+
+    @Singleton
+    @Provides
+    fun provideSharedPreferences(context: Context): SharedPreferencesCache = SharedPreferencesCache(context, BuildConfig.APPLICATION_ID + ".SharedPreferencesCache")
 
     @Singleton
     @Provides
@@ -183,35 +192,15 @@ class ApplicationModule {
             val original = chain.request()
             val headers = original.headers
             if (headers.size == 0) {
-                val builder = original.newBuilder()
-                builder.header("Content-Type", "application/json")
-                        .header("User-Agent", "Android Tablet")
-                        .header("DEVICE-MODEL", Build.DEVICE)
-                        .header("OS", "A")
-                        .header("OS-VER", Build.VERSION.RELEASE)
-                        .header("MARKET", Build.BRAND)
-                        .method(original.method, original.body)
-                val body = original.body
-                Timber.i("body check %s", body)
-//                var appId: String = preferencesHelper.getAppId()
-//                val clientId: String = preferencesHelper.getClientId()
-//                val authorization: String = preferencesHelper.getAuthToken()
-//                if (appId.isNullOrBlank()) {
-//                    val androidId = Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
-//                    appId = UUID.nameUUIDFromBytes(androidId.toByteArray()).toString()
-//                    preferencesHelper.putAppId(appId)
-//                }
-//                if (appId.isNullOrEmpty()) {
-//                    builder.header("APP-ID", appId)
-//                }
-//                if (!clientId.isNullOrBlank()) {
-//                    builder.header("CLIENT-ID", clientId)
-//                }
-//                if (!authorization.isNullOrBlank()) {
-//                    builder.header("Authorization", authorization)
-//                }
-//                Timber.d("appId %s, clientId %s, authorization %s", appId, clientId, authorization)
-                val request = builder.build()
+                val request = original.newBuilder().apply {
+                    header("Content-Type", "application/json; charset=utf-8")
+                    method(original.method, original.body)
+                    val authorization = localDataSource.getAuthToken()
+                    authorization?.let {
+                        header("Authorization", authorization)
+                        Timber.d("authorization $authorization")
+                    }
+                }.build()
                 chain.proceed(request)
             } else chain.proceed(original)
         }
@@ -228,9 +217,25 @@ class ApplicationModule {
     @Named("networkCheckInterceptor")
     fun provideNetworkCheckInterceptor(context: Context): Interceptor {
         return Interceptor { chain: Interceptor.Chain ->
-            val original = chain.request()
+
             val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-            val isConnected = connectivityManager.activeNetworkInfo?.isConnected ?: false
+            var isConnected = false
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                connectivityManager.activeNetwork?.let {
+                    connectivityManager.getNetworkCapabilities(it)?.let {
+                        isConnected = when {
+                            it.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+                            it.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+                            it.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
+                            else -> false
+                        }
+                    }
+                }
+            } else {
+                isConnected = connectivityManager.activeNetworkInfo?.isConnected ?: false
+            }
+
+            val original = chain.request()
             if (isConnected) chain.proceed(original) else throw IOException("not contected")
         }
     }

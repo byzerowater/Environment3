@@ -25,40 +25,103 @@
             type="com.zerowater.environment.ui.login.LoginViewModel" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:fitsSystemWindows="true"
+        android:openKeyboard="@{viewmodel.openKeyboard}">
 
-        <EditText
-            android:id="@+id/name"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="42dp"
-            android:layout_marginLeft="13dp"
-            android:layout_marginRight="13dp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <EditText
-            android:id="@+id/phone"
-            android:layout_width="match_parent"
-            android:layout_height="42dp"
-            android:layout_marginTop="12dp"
-            app:layout_constraintLeft_toLeftOf="@id/name"
-            app:layout_constraintRight_toRightOf="@id/name"
-            app:layout_constraintTop_toBottomOf="@id/name" />
-
-        <Button
-            android:id="@+id/login"
-            android:layout_width="match_parent"
-            android:layout_height="42dp"
-            android:layout_marginTop="12dp"
-            android:onClick="@{viewmodel::login}"
-            app:layout_constraintLeft_toLeftOf="@id/name"
-            app:layout_constraintRight_toRightOf="@id/name"
-            app:layout_constraintTop_toBottomOf="@id/phone" />
+            android:layout_height="match_parent"
+            android:background="@color/white_ffffff_ff"
+            android:paddingBottom="60dp">
 
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <EditText
+                android:id="@+id/name"
+                android:layout_width="0dp"
+                android:layout_height="42dp"
+                android:layout_marginLeft="13dp"
+                android:layout_marginTop="26dp"
+                android:layout_marginRight="13dp"
+                android:background="@drawable/selector_edit_text"
+                android:htmlTextHint="@{@string/text_login_name_hint}"
+                android:inputType="textPersonName"
+                android:paddingLeft="11dp"
+                android:paddingRight="48dp"
+                android:singleLine="true"
+                android:text="@={viewmodel.name}"
+                android:textColor="@color/gray_4f4f54_ff"
+                android:textColorHint="@color/gray_bbbbc9_ff"
+                android:textSize="14sp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="김영수" />
+
+            <ImageButton
+                android:id="@+id/delete_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/ic_delete"
+                android:onClick='@{() -> name.setText("")}'
+                app:layout_constraintBottom_toBottomOf="@id/name"
+                app:layout_constraintEnd_toEndOf="@id/name"
+                app:layout_constraintTop_toTopOf="@id/name"
+                app:visibleGone="@{viewmodel.name == null || viewmodel.name.trim().length() == 0}" />
+
+            <EditText
+                android:id="@+id/phone"
+                android:layout_width="0dp"
+                android:layout_height="42dp"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/selector_edit_text"
+                android:htmlTextHint="@{@string/text_login_phone_hint}"
+                android:inputType="phone"
+                android:paddingLeft="11dp"
+                android:paddingRight="48dp"
+                android:singleLine="true"
+                android:text="@={viewmodel.phone}"
+                android:textColor="@color/gray_4f4f54_ff"
+                android:textColorHint="@color/gray_bbbbc9_ff"
+                android:textSize="14sp"
+                app:layout_constraintLeft_toLeftOf="@id/name"
+                app:layout_constraintRight_toRightOf="@id/name"
+                app:layout_constraintTop_toBottomOf="@id/name"
+                tools:text="01092268978" />
+
+            <ImageButton
+                android:id="@+id/delete_phone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/ic_delete"
+                android:onClick='@{() -> phone.setText("")}'
+                app:layout_constraintBottom_toBottomOf="@id/phone"
+                app:layout_constraintEnd_toEndOf="@id/phone"
+                app:layout_constraintTop_toTopOf="@id/phone"
+                app:visibleGone="@{viewmodel.phone == null || viewmodel.phone.trim().length() == 0}" />
+
+            <Button
+                android:id="@+id/login"
+                android:layout_width="0dp"
+                android:layout_height="45dp"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/selector_btn_login"
+                android:enabled="@{viewmodel.loginEnabled}"
+                android:onClick="@{() -> viewmodel.login()}"
+                android:text="@string/text_login"
+                android:textColor="@color/white_ffffff_ff"
+                android:textSize="15sp"
+                app:layout_constraintLeft_toLeftOf="@id/name"
+                app:layout_constraintRight_toRightOf="@id/name"
+                app:layout_constraintTop_toBottomOf="@id/phone" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.core.widget.NestedScrollView>
 
 </layout>

@@ -1,26 +1,25 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
-apply plugin: "androidx.navigation.safeargs.kotlin"
+apply plugin: 'androidx.navigation.safeargs.kotlin'
 
 android {
     compileSdkVersion rootProject.compileSdkVersion
 
     defaultConfig {
-        applicationId "com.example.android.architecture.blueprints.dagger"
+        applicationId "com.zerowater.environment"
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
         versionCode 1
-        versionName "1.0"
-
-        testInstrumentationRunner 'com.example.todoapp.CustomTestRunner'
+        versionName "1.0.0"
     }
 
     buildTypes {
 
-        def devBaseUrl = { path -> "\"https://baseurl/$path\"" }
-        def stageBaseUrl = { path -> "\"https://baseurl/$path\"" }
-        def releaseBaseUrl = { path -> "\"https://baseurl/$path\"" }
+        def devBaseUrl = { path -> "\"https://zerowater.io/$path\"" }
+        def stageBaseUrl = { path -> "\"https://zerowater.io/$path\"" }
+        def releaseBaseUrl = { path -> "\"https://zerowater.io/$path\"" }
 
         debug {
             buildConfigField "String", "BASE_URL", devBaseUrl("")
@@ -63,6 +62,10 @@ android {
 
     kotlinOptions {
         jvmTarget = "1.8"
+    }
+
+    androidExtensions {
+        experimental = true
     }
 }
 
@@ -167,4 +170,5 @@ dependencies {
 
     // android permission
     implementation "pub.devrel:easypermissions:$permissionVersion"
+    implementation "net.yslibrary.keyboardvisibilityevent:keyboardvisibilityevent:$keyboardVersion"
 }

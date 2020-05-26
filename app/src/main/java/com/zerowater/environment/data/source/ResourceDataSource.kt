@@ -13,15 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.zerowater.environment.util
+package com.zerowater.environment.data.source
 
 /**
- * Extension functions and Binding Adapters.
+ * Main entry point for accessing tasks data.
  */
+interface ResourceDataSource {
+    fun getNetworkOperatorName(): String?
 
-import android.view.View
-import androidx.lifecycle.ViewModel
-import androidx.navigation.NavController
-import androidx.navigation.Navigation
+    fun getUDID(): String?
 
-fun ViewModel.findNavController(view: View): NavController = Navigation.findNavController(view)
+    fun isIgnoringBatteryOptimizations(): Boolean
+
+    fun checkSelfPermission(): Boolean
+}

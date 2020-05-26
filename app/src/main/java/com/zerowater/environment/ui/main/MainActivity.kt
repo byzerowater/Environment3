@@ -25,7 +25,7 @@ import com.zerowater.environment.R
  * Created by ZERO on 2020-05-18.
  * zero company Ltd
  * byzerowater@gmail.com
- * Description: Main activity for the environment app. Holds the Navigation Host Fragment.
+ * Description: Main activity for the Environmentapp. Holds the Navigation Host Fragment.
  */
 class MainActivity : AppCompatActivity() {
 

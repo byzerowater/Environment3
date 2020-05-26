@@ -18,6 +18,7 @@ package com.zerowater.environment.ui.history
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.zerowater.environment.Event
 import com.zerowater.environment.data.source.Repository
 import javax.inject.Inject
 
@@ -36,4 +37,15 @@ class HistoryViewModel @Inject constructor(
 
     private val _dataLoading = MutableLiveData<Boolean>()
     val dataLoading: LiveData<Boolean> = _dataLoading
+
+    private val _navigation = MutableLiveData(Event(HistoryNavigation.UNKNOWN))
+    val navigation: LiveData<Event<HistoryNavigation>> = _navigation
+
+    fun navigation(navi: HistoryNavigation) {
+        _navigation.value = Event(navi)
+    }
+
+    enum class HistoryNavigation {
+        UNKNOWN, DIALOG
+    }
 }

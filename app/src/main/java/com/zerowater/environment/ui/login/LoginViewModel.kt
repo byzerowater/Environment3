@@ -15,14 +15,16 @@
  */
 package com.zerowater.environment.ui.login
 
-import android.view.View
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import com.zerowater.environment.data.Version
+import androidx.lifecycle.*
+import com.zerowater.environment.Event
+import com.zerowater.environment.data.Auth
+import com.zerowater.environment.data.Result
+import com.zerowater.environment.data.UserDevice
 import com.zerowater.environment.data.source.Repository
-import com.zerowater.environment.util.findNavController
+import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
+
 
 /**
  * Environment
@@ -36,19 +38,75 @@ class LoginViewModel @Inject constructor(
         private val repository: Repository
 ) : ViewModel() {
 
-    private val _version = MutableLiveData<Version>()
-    val version: LiveData<Version> = _version
+
+    /**
+     * 로그인 이름 LiveData
+     */
+    val name = MutableLiveData<String>("restdocsTest")
+
+    /**
+     * 로그인 번호 LiveData
+     */
+    val phone = MutableLiveData<String>("01012341234")
+
+    /**
+     * 로그인 버튼 활성 상태 LiveData
+     */
+    private val _loginEnabled = MediatorLiveData<Boolean>()
+    val loginEnabled: LiveData<Boolean> = _loginEnabled
+
+    /**
+     * 키보드 열림 상태 LiveData
+     */
+    private val _openKeyboard = MutableLiveData(false)
+    val openKeyboard: LiveData<Boolean> = _openKeyboard
 
     private val _dataLoading = MutableLiveData<Boolean>()
     val dataLoading: LiveData<Boolean> = _dataLoading
 
-    fun login(view: View) {
-        navigateToMain(view)
+    private val _navigation = MutableLiveData(Event(LoginNavigation.UNKNOWN))
+    val navigation: LiveData<Event<LoginNavigation>> = _navigation
+
+    init {
+        _loginEnabled.addSource(name, Observer { s: String? -> _loginEnabled.value = !s.isNullOrBlank() and !phone.value.isNullOrBlank() })
+        _loginEnabled.addSource(phone, Observer { s: String? -> _loginEnabled.value = !s.isNullOrBlank() and !name.value.isNullOrBlank() })
     }
 
-    private fun navigateToMain(view: View) {
-        val action = LoginFragmentDirections
-                .actionMain()
-        findNavController(view).navigate(action)
+    fun setOpenKeyboard(isOpen: Boolean) {
+        _openKeyboard.value = isOpen
     }
+
+
+    fun login() {
+        viewModelScope.launch {
+            repository.getAuthToken(
+                    Auth(name.value!!,
+                            phone.value!!,
+                            UserDevice(deviceId = repository.getUDID(),
+                                    pushId = "token",
+                                    telecom = repository.getNetworkOperatorName()
+                            )
+                    )
+            ).run {
+                if (this is Result.Success) {
+                    Timber.i("Result.Success")
+                } else if (this is Result.Error) {
+                    val error = this
+                    Timber.i("Result.Error $error")
+                }
+                navigation(LoginNavigation.MAIN)
+            }
+
+        }
+    }
+
+    fun navigation(navi: LoginNavigation) {
+        _navigation.value = Event(navi)
+    }
+
+    enum class LoginNavigation {
+        UNKNOWN, MAIN
+    }
+
 }
+

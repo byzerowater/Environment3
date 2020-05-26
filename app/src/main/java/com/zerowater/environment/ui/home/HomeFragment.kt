@@ -24,6 +24,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.zerowater.environment.R
 import com.zerowater.environment.databinding.HomeFragBinding
 import dagger.android.support.DaggerFragment
+import timber.log.Timber
 import javax.inject.Inject
 
 /**
@@ -47,7 +48,7 @@ class HomeFragment : DaggerFragment() {
             container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
-
+        Timber.i("onCreateView")
         val view = inflater.inflate(R.layout.home_frag, container, false)
         viewDataBinding = HomeFragBinding.bind(view).apply {
             viewmodel = viewModel
@@ -55,5 +56,4 @@ class HomeFragment : DaggerFragment() {
         }
         return view
     }
-
 }

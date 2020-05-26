@@ -15,14 +15,28 @@
   -->
 
 <resources>
-    <color name="colorPrimary">#FFFFF0</color>
-    <color name="colorPrimaryDark">#263238</color>
-    <color name="colorAccent">#2E7D32</color>
-    <color name="colorTextPrimary">#000000</color>
-    <color name="colorGrey">#757575</color>
+    <color name="colorPrimary">@color/blue_06346c_ff</color>
+    <color name="colorPrimaryDark">@color/blue_072e5d_ff</color>
+    <color name="colorAccent">@color/blue_106393_ff</color>
 
-    <drawable name="completedTaskBackground">#CCCCCC</drawable>
+    <color name="transparent_000000_00">#00000000</color>
 
-    <drawable name="touchFeedback">#CFD8DC</drawable>
+
+    <color name="white_ffffff_ff">#ffffffff</color>
+
+    <color name="blue_0067a3_ff">#ff0067a3</color>
+    <color name="blue_106393_ff">#ff106393</color>
+    <color name="blue_06346c_ff">#ff06346c</color>
+    <color name="blue_072e5d_ff">#ff072e5d</color>
+
+    <color name="gray_e4e4eb_ff">#ffe4e4eb</color>
+    <color name="gray_d8d8e3_ff">#ffd8d8e3</color>
+    <color name="gray_cbcbd9_ff">#ffcbcbd9</color>
+    <color name="gray_bbbbc9_ff">#ffbbbbc9</color>
+    <color name="gray_8e8e9c_ff">#ff8e8e9c</color>
+    <color name="gray_4f4f54_ff">#ff4f4f54</color>
+
+    <color name="black_13132b_ff">#ff13132b</color>
+
 
 </resources>

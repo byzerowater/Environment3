@@ -24,12 +24,16 @@ import kotlinx.coroutines.Dispatchers
  */
 
 private const val AUTH_TOKEN: String = "authToken"
+private const val UDID_TOKEN: String = "userDeviceIdentification"
 
 class SharedPreferencesDataSource internal constructor(
         private val sharedPreferences: SharedPreferencesCache,
         private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : LocalDataSource {
 
-    override fun getAuthToken(): String = sharedPreferences.getString(AUTH_TOKEN)
+    override fun getAuthToken(): String? = sharedPreferences.getString(AUTH_TOKEN)
     override fun putAuthToken(authToken: String) = sharedPreferences.put(AUTH_TOKEN, authToken)
+
+    override fun getUDID(): String? = sharedPreferences.getString(UDID_TOKEN)
+    override fun putUDID(udid: String) = sharedPreferences.put(UDID_TOKEN, udid)
 }

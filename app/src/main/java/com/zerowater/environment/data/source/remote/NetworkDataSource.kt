@@ -15,7 +15,9 @@
  */
 package com.zerowater.environment.data.source.remote
 
+import com.zerowater.environment.data.Auth
 import com.zerowater.environment.data.Result
+import com.zerowater.environment.data.Token
 import com.zerowater.environment.data.Version
 import com.zerowater.environment.data.source.RemoteDataSource
 import kotlinx.coroutines.CoroutineDispatcher
@@ -43,4 +45,16 @@ class NetworkDataSource internal constructor(
         }
     }
 
+    override suspend fun getAuthToken(auth: Auth): Result<Token> = withContext(ioDispatcher) {
+        try {
+            val token = networkService.getAuthToken(auth)
+            if (token != null) {
+                return@withContext Result.Success(token)
+            } else {
+                return@withContext Result.Error(Exception("token is null"))
+            }
+        } catch (e: Exception) {
+            return@withContext Result.Error(e)
+        }
+    }
 }

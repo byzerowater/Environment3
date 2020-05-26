@@ -18,7 +18,7 @@ package com.zerowater.environment.ui.main
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.zerowater.environment.data.Version
+import com.zerowater.environment.Event
 import com.zerowater.environment.data.source.Repository
 import javax.inject.Inject
 
@@ -33,11 +33,18 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(
         private val repository: Repository
 ) : ViewModel() {
+    private val _navigation = MutableLiveData(Event(MainNavigation.HOME))
+    val navigation: LiveData<Event<MainNavigation>> = _navigation
 
-    private val _version = MutableLiveData<Version>()
-    val version: LiveData<Version> = _version
+    private val _permission = MutableLiveData(Event(repository.checkSelfPermission()))
+    val permission: LiveData<Event<Boolean>> = _permission
 
-    private val _dataLoading = MutableLiveData<Boolean>()
-    val dataLoading: LiveData<Boolean> = _dataLoading
+    fun navigation(navi: MainNavigation) {
+        _navigation.value = Event(navi)
+    }
 
+    enum class MainNavigation {
+        HOME, HISTORY, MORE
+    }
 }
+

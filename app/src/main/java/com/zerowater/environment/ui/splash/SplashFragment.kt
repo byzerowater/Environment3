@@ -15,17 +15,25 @@
  */
 package com.zerowater.environment.ui.splash
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.zerowater.environment.BuildConfig
+import com.zerowater.environment.NavGraphDirections
 import com.zerowater.environment.R
+import com.zerowater.environment.data.Dialog
 import com.zerowater.environment.databinding.SplashFragBinding
+import com.zerowater.environment.ui.dialog.DialogViewModel
 import dagger.android.support.DaggerFragment
+import timber.log.Timber
 import javax.inject.Inject
 
 /**
@@ -43,6 +51,7 @@ class SplashFragment : DaggerFragment() {
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private val viewModel by viewModels<SplashViewModel> { viewModelFactory }
+    private val dialogViewModel by activityViewModels<DialogViewModel> { viewModelFactory }
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -61,7 +70,31 @@ class SplashFragment : DaggerFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        viewModel.version.observe(viewLifecycleOwner, Observer { navigateToLogin() })
+        viewModel.navigation.observe(viewLifecycleOwner, Observer {
+            when (it.getContentIfNotHandled()) {
+                SplashViewModel.SplashNavigation.LOGIN -> navigateToLogin()
+                SplashViewModel.SplashNavigation.MAIN -> navigateToMain()
+            }
+        })
+
+        viewModel.version.observe(viewLifecycleOwner, Observer {
+            val action = NavGraphDirections.actionDialog(Dialog(getString(R.string.text_update_guide),
+                    if (it.isForceUpdate) getString(R.string.text_immediately_update) else getString(R.string.text_late),
+                    if (!it.isForceUpdate) getString(R.string.text_update) else null)
+            )
+            findNavController().navigate(action)
+        })
+
+        dialogViewModel.navigation.observe(viewLifecycleOwner, Observer {
+            Timber.i("dialogViewModel navigation %s", it)
+            val version = viewModel.version.value
+            when (it.getContentIfNotHandled()) {
+                DialogViewModel.DialogNavigation.LEFT -> if (version!!.isForceUpdate) apkUpdate(version.storeUrl) else viewModel.navigationToNext()
+                DialogViewModel.DialogNavigation.RIGHT -> apkUpdate(version!!.storeUrl)
+                else -> Timber.i("navigation else")
+            }
+
+        })
         viewModel.getVersion()
     }
 
@@ -69,6 +102,29 @@ class SplashFragment : DaggerFragment() {
         val action = SplashFragmentDirections
                 .actionLogin()
         findNavController().navigate(action)
+    }
+
+    private fun navigateToMain() {
+        val action = SplashFragmentDirections
+                .actionMain()
+        findNavController().navigate(action)
+    }
+
+    /**
+     * 앱 다운로드
+     *
+     * @param url 다운로드 URL
+     */
+    private fun apkUpdate(url: String) {
+        var url: String? = url
+
+        if (url.isNullOrBlank()) {
+            url = "market://details?id=" + BuildConfig.APPLICATION_ID
+        }
+        val uri = Uri.parse(url)
+        val intent = Intent(Intent.ACTION_VIEW, uri)
+        startActivity(intent)
+        activity!!.finish()
     }
 
 }

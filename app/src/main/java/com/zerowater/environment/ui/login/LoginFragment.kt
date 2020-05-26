@@ -20,10 +20,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.zerowater.environment.R
 import com.zerowater.environment.databinding.LoginFragBinding
 import dagger.android.support.DaggerFragment
+import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent.setEventListener
+import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEventListener
+import timber.log.Timber
 import javax.inject.Inject
 
 /**
@@ -54,6 +59,39 @@ class LoginFragment : DaggerFragment() {
             lifecycleOwner = this@LoginFragment.viewLifecycleOwner
         }
         return view
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        setEventListener(activity!!,
+                viewLifecycleOwner,
+                object : KeyboardVisibilityEventListener {
+                    override fun onVisibilityChanged(isOpen: Boolean) {
+                        viewModel.setOpenKeyboard(isOpen)
+                    }
+                })
+
+        viewModel.navigation.observe(viewLifecycleOwner, Observer {
+            when (it.getContentIfNotHandled()) {
+                LoginViewModel.LoginNavigation.MAIN -> navigateToMain()
+            }
+        })
+    }
+
+    private fun navigateToMain() {
+        val action = LoginFragmentDirections
+                .actionMain()
+        findNavController().navigate(action)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Timber.i("onCreateView")
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        Timber.i("onCreateView")
     }
 
 }

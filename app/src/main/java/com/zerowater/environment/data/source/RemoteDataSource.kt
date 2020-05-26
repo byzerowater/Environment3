@@ -15,7 +15,9 @@
  */
 package com.zerowater.environment.data.source
 
+import com.zerowater.environment.data.Auth
 import com.zerowater.environment.data.Result
+import com.zerowater.environment.data.Token
 import com.zerowater.environment.data.Version
 
 /**
@@ -23,5 +25,5 @@ import com.zerowater.environment.data.Version
  */
 interface RemoteDataSource {
     suspend fun getVersion(): Result<Version>
-
+    suspend fun getAuthToken(auth: Auth): Result<Token>
 }

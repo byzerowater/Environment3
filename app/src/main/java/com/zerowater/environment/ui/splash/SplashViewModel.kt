@@ -19,7 +19,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.zerowater.environment.data.Result
+import com.zerowater.environment.BuildConfig
+import com.zerowater.environment.Event
 import com.zerowater.environment.data.Result.Success
 import com.zerowater.environment.data.Version
 import com.zerowater.environment.data.source.Repository
@@ -45,20 +46,42 @@ class SplashViewModel @Inject constructor(
     private val _dataLoading = MutableLiveData<Boolean>()
     val dataLoading: LiveData<Boolean> = _dataLoading
 
+    private val _navigation = MutableLiveData(Event(SplashNavigation.UNKNOWN))
+    val navigation: LiveData<Event<SplashNavigation>> = _navigation
+
     fun getVersion() {
         viewModelScope.launch {
-            repository.getVersion().let {
-                delay(2000L)
-                _version.value = computeResult(it)
+            repository.getVersion().run {
+                val version = if (this is Success) this.data else null
+                version?.let {
+                    if (BuildConfig.VERSION_NAME.compareTo(it.version) < 0) {
+                        _version.value = version
+                    } else {
+                        navigationToNext()
+                    }
+                }
+                delay(2000)
+                navigationToNext()
             }
         }
     }
 
-    private fun computeResult(versionResult: Result<Version>): Version? {
-        return if (versionResult is Success) {
-            versionResult.data
-        } else {
-            null
-        }
+    fun navigationToNext() {
+        navigation(
+                if (repository.getAuthToken().isNullOrBlank())
+                    SplashNavigation.LOGIN
+                else
+                    SplashNavigation.MAIN
+        )
+    }
+
+    private fun navigation(navi: SplashNavigation) {
+        _navigation.value = Event(navi)
+    }
+
+    enum class SplashNavigation {
+        UNKNOWN, LOGIN, MAIN
     }
 }
+
+

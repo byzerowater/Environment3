@@ -19,11 +19,20 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
+import com.zerowater.environment.NavGraphDirections
 import com.zerowater.environment.R
+import com.zerowater.environment.data.Dialog
 import com.zerowater.environment.databinding.HistoryFragBinding
+import com.zerowater.environment.ui.dialog.DialogViewModel
+import com.zerowater.environment.ui.dialog.DialogViewModel.DialogNavigation
+import com.zerowater.environment.ui.history.HistoryViewModel.HistoryNavigation
 import dagger.android.support.DaggerFragment
+import timber.log.Timber
 import javax.inject.Inject
 
 /**
@@ -41,19 +50,45 @@ class HistoryFragment : DaggerFragment() {
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private val viewModel by viewModels<HistoryViewModel> { viewModelFactory }
+    private val dialogViewModel by activityViewModels<DialogViewModel> { viewModelFactory }
 
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
-
+        Timber.i("onCreateView")
         val view = inflater.inflate(R.layout.history_frag, container, false)
         viewDataBinding = HistoryFragBinding.bind(view).apply {
             viewmodel = viewModel
             lifecycleOwner = this@HistoryFragment.viewLifecycleOwner
+            adapter = HistoryAdapter(viewModel)
         }
         return view
     }
 
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        viewModel.navigation.observe(viewLifecycleOwner, Observer {
+            Timber.i("viewModel navigation %s", it)
+            when (it.getContentIfNotHandled()) {
+                HistoryNavigation.DIALOG -> navigateToDialog()
+                else -> Timber.i("navigation else")
+            }
+        })
+
+        dialogViewModel.navigation.observe(viewLifecycleOwner, Observer {
+            Timber.i("dialogViewModel navigation %s", it)
+            when (it.getContentIfNotHandled()) {
+                DialogNavigation.LEFT -> Timber.i("left")
+                DialogNavigation.RIGHT -> Timber.i("right")
+                else -> Timber.i("navigation else")
+            }
+        })
+    }
+
+    private fun navigateToDialog() {
+        val action = NavGraphDirections.actionDialog(Dialog("test", "test", "right"))
+        findNavController().navigate(action)
+    }
 }
