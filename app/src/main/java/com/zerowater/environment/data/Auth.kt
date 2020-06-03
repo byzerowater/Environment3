@@ -13,14 +13,15 @@ import com.zerowater.environment.BuildConfig
  */
 
 data class Token(
-        val accessToken: String,
-        val accessTokenExpiredTime: Long,
-        val refreshToken: String
+        val accessToken: String? = null,
+        val accessTokenExpiredTime: Long? = null,
+        val refreshToken: String? = null
 )
 
 data class Auth(
         val name: String,
         val phoneNo: String,
+        val isUpdateDevice: Boolean = true,
         val userDevice: UserDevice
 )
 

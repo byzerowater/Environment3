@@ -27,7 +27,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.zerowater.environment.R
 import com.zerowater.environment.databinding.DialogDiaBinding
-import com.zerowater.environment.ui.dialog.DialogViewModel.DialogNavigation
 import com.zerowater.environment.util.initDialog
 import dagger.android.support.DaggerDialogFragment
 import timber.log.Timber
@@ -74,6 +73,7 @@ class DialogFragment : DaggerDialogFragment() {
             when (it.getContentIfNotHandled()) {
                 DialogNavigation.LEFT, DialogNavigation.RIGHT -> {
                     findNavController().navigateUp()
+                    activityViewModel.addType(args.type)
                     activityViewModel.navigation(it.peekContent())
                 }
             }

@@ -72,6 +72,10 @@
         tools:layout="@layout/dialog_dia">
 
         <argument
+            android:name="type"
+            app:argType="com.zerowater.environment.ui.dialog.DialogType" />
+
+        <argument
             android:name="data"
             app:argType="com.zerowater.environment.data.Dialog" />
     </dialog>

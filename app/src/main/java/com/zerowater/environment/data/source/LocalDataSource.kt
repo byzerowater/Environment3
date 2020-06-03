@@ -19,10 +19,16 @@ package com.zerowater.environment.data.source
  * Main entry point for accessing data.
  */
 interface LocalDataSource {
-    fun getAuthToken(): String?
-    fun putAuthToken(authToken: String)
+    fun getAccessToken(): String?
+    fun putAccessToken(accessToken: String?)
+
+    fun getRefreshToken(): String?
+    fun putRefreshToken(refreshToken: String?)
+
+    fun getAccessTokenExpiredTime(): Long?
+    fun putAccessTokenExpiredTime(accessTokenExpiredTime: Long?)
 
     fun getUDID(): String?
-    fun putUDID(udid: String)
+    fun putUDID(udid: String?)
 
 }

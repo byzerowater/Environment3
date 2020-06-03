@@ -23,7 +23,9 @@ import kotlinx.coroutines.Dispatchers
  * Concrete implementation of a data source as a db.
  */
 
-private const val AUTH_TOKEN: String = "authToken"
+private const val ACCESS_TOKEN: String = "accessToken"
+private const val REFRESH_TOKEN: String = "refreshToken"
+private const val ACCESS_TOKEN_EXPIRED_TIME: String = "accessTokenExpiredTime"
 private const val UDID_TOKEN: String = "userDeviceIdentification"
 
 class SharedPreferencesDataSource internal constructor(
@@ -31,9 +33,33 @@ class SharedPreferencesDataSource internal constructor(
         private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : LocalDataSource {
 
-    override fun getAuthToken(): String? = sharedPreferences.getString(AUTH_TOKEN)
-    override fun putAuthToken(authToken: String) = sharedPreferences.put(AUTH_TOKEN, authToken)
+    override fun getAccessToken(): String? = sharedPreferences.getString(ACCESS_TOKEN)
+    override fun putAccessToken(accessToken: String?) {
+        if (accessToken.isNullOrBlank()) {
+            sharedPreferences.remove(ACCESS_TOKEN)
+        } else {
+            sharedPreferences.put(ACCESS_TOKEN, accessToken)
+        }
+    }
+
+    override fun getRefreshToken(): String? = sharedPreferences.getString(REFRESH_TOKEN)
+    override fun putRefreshToken(refreshToken: String?) {
+        if (refreshToken.isNullOrBlank()) {
+            sharedPreferences.remove(REFRESH_TOKEN)
+        } else {
+            sharedPreferences.put(REFRESH_TOKEN, refreshToken)
+        }
+    }
+
+    override fun getAccessTokenExpiredTime(): Long? = sharedPreferences.getLong(ACCESS_TOKEN_EXPIRED_TIME)
+    override fun putAccessTokenExpiredTime(accessTokenExpiredTime: Long?) = sharedPreferences.put(ACCESS_TOKEN_EXPIRED_TIME, accessTokenExpiredTime)
 
     override fun getUDID(): String? = sharedPreferences.getString(UDID_TOKEN)
-    override fun putUDID(udid: String) = sharedPreferences.put(UDID_TOKEN, udid)
+    override fun putUDID(udid: String?) {
+        if (udid.isNullOrBlank()) {
+            sharedPreferences.remove(UDID_TOKEN)
+        } else {
+            sharedPreferences.put(UDID_TOKEN, udid)
+        }
+    }
 }

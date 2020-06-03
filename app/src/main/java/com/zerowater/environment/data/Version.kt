@@ -1,9 +1,14 @@
 package com.zerowater.environment.data
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+
+@Parcelize
 data class Version(
-        val appPackage: String,
-        val isForceUpdate: Boolean,
-        val osType: String,
-        val storeUrl: String,
-        val version: String
-)
+        val isForceUpdate: Boolean? = null,
+        val message: String? = null,
+        val osType: String? = null,
+        val packageId: String? = null,
+        val storeUrl: String? = null,
+        val version: String? = null
+) : Parcelable

@@ -31,6 +31,8 @@ import com.zerowater.environment.NavGraphDirections
 import com.zerowater.environment.R
 import com.zerowater.environment.data.Dialog
 import com.zerowater.environment.databinding.SplashFragBinding
+import com.zerowater.environment.ui.dialog.DialogNavigation
+import com.zerowater.environment.ui.dialog.DialogType
 import com.zerowater.environment.ui.dialog.DialogViewModel
 import dagger.android.support.DaggerFragment
 import timber.log.Timber
@@ -78,9 +80,11 @@ class SplashFragment : DaggerFragment() {
         })
 
         viewModel.version.observe(viewLifecycleOwner, Observer {
-            val action = NavGraphDirections.actionDialog(Dialog(getString(R.string.text_update_guide),
-                    if (it.isForceUpdate) getString(R.string.text_immediately_update) else getString(R.string.text_late),
-                    if (!it.isForceUpdate) getString(R.string.text_update) else null)
+            val action = NavGraphDirections.actionDialog(
+                    DialogType.GENERAL,
+                    Dialog(it.message ?: getString(R.string.text_update_guide),
+                            if (it.isForceUpdate == true) getString(R.string.text_immediately_update) else getString(R.string.text_late),
+                            if (it.isForceUpdate == false) getString(R.string.text_update) else null)
             )
             findNavController().navigate(action)
         })
@@ -89,8 +93,14 @@ class SplashFragment : DaggerFragment() {
             Timber.i("dialogViewModel navigation %s", it)
             val version = viewModel.version.value
             when (it.getContentIfNotHandled()) {
-                DialogViewModel.DialogNavigation.LEFT -> if (version!!.isForceUpdate) apkUpdate(version.storeUrl) else viewModel.navigationToNext()
-                DialogViewModel.DialogNavigation.RIGHT -> apkUpdate(version!!.storeUrl)
+                DialogNavigation.LEFT -> {
+                    Timber.i("left ${dialogViewModel.getType()}")
+                    if (version!!.isForceUpdate == true) apkUpdate(version.storeUrl) else viewModel.navigationToNext()
+                }
+                DialogNavigation.RIGHT -> {
+                    Timber.i("right ${dialogViewModel.getType()}")
+                    apkUpdate(version!!.storeUrl)
+                }
                 else -> Timber.i("navigation else")
             }
 
@@ -115,7 +125,7 @@ class SplashFragment : DaggerFragment() {
      *
      * @param url 다운로드 URL
      */
-    private fun apkUpdate(url: String) {
+    private fun apkUpdate(url: String?) {
         var url: String? = url
 
         if (url.isNullOrBlank()) {

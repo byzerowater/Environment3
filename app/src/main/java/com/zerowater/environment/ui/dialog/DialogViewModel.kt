@@ -20,6 +20,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.zerowater.environment.Event
 import com.zerowater.environment.data.source.Repository
+import java.util.*
 import javax.inject.Inject
 
 /**
@@ -37,17 +38,26 @@ class DialogViewModel @Inject constructor(
     private val _navigation = MutableLiveData(Event(DialogNavigation.UNKNOWN))
     val navigation: LiveData<Event<DialogNavigation>> = _navigation
 
+    private val _type = Stack<DialogType>()
 
     fun navigation(navi: DialogNavigation) {
         _navigation.value = Event(navi)
     }
 
-    enum class DialogNavigation {
-        UNKNOWN, LEFT, RIGHT
+    fun getType(): DialogType {
+
+        var type = DialogType.UNKNOWN
+        if (_type.size > 0) {
+            type = _type.pop()
+        }
+        return type
     }
 
+    fun addType(type: DialogType) {
+        _type.add(type)
+    }
 }
 
-
-
-
+enum class DialogNavigation {
+    UNKNOWN, LEFT, RIGHT
+}

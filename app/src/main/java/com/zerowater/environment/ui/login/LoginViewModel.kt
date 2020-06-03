@@ -42,12 +42,12 @@ class LoginViewModel @Inject constructor(
     /**
      * 로그인 이름 LiveData
      */
-    val name = MutableLiveData<String>("restdocsTest")
+    val name = MutableLiveData<String>("byzerowater")
 
     /**
      * 로그인 번호 LiveData
      */
-    val phone = MutableLiveData<String>("01012341234")
+    val phone = MutableLiveData<String>("01000000000")
 
     /**
      * 로그인 버튼 활성 상태 LiveData
@@ -79,10 +79,10 @@ class LoginViewModel @Inject constructor(
 
     fun login() {
         viewModelScope.launch {
-            repository.getAuthToken(
-                    Auth(name.value!!,
-                            phone.value!!,
-                            UserDevice(deviceId = repository.getUDID(),
+            repository.login(
+                    Auth(name = name.value!!,
+                            phoneNo = phone.value!!,
+                            userDevice = UserDevice(deviceId = repository.getUDID(),
                                     pushId = "token",
                                     telecom = repository.getNetworkOperatorName()
                             )

@@ -19,7 +19,7 @@
 
     <data>
 
-        <import type="com.zerowater.environment.ui.dialog.DialogViewModel.DialogNavigation" />
+        <import type="com.zerowater.environment.ui.dialog.DialogNavigation" />
 
         <variable
             name="data"

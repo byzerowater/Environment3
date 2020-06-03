@@ -15,10 +15,7 @@
  */
 package com.zerowater.environment.data.source.remote
 
-import com.zerowater.environment.data.Auth
-import com.zerowater.environment.data.Result
-import com.zerowater.environment.data.Token
-import com.zerowater.environment.data.Version
+import com.zerowater.environment.data.*
 import com.zerowater.environment.data.source.RemoteDataSource
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -45,13 +42,39 @@ class NetworkDataSource internal constructor(
         }
     }
 
-    override suspend fun getAuthToken(auth: Auth): Result<Token> = withContext(ioDispatcher) {
+    override suspend fun login(auth: Auth): Result<Token> = withContext(ioDispatcher) {
         try {
-            val token = networkService.getAuthToken(auth)
+            val token = networkService.login(auth)
             if (token != null) {
                 return@withContext Result.Success(token)
             } else {
                 return@withContext Result.Error(Exception("token is null"))
+            }
+        } catch (e: Exception) {
+            return@withContext Result.Error(e)
+        }
+    }
+
+    override suspend fun refreshToken(token: Token): Result<Token> = withContext(ioDispatcher) {
+        try {
+            val token = networkService.refreshToken(token)
+            if (token != null) {
+                return@withContext Result.Success(token)
+            } else {
+                return@withContext Result.Error(Exception("token is null"))
+            }
+        } catch (e: Exception) {
+            return@withContext Result.Error(e)
+        }
+    }
+
+    override suspend fun getSchedule(): Result<Schedule> = withContext(ioDispatcher) {
+        try {
+            val schedule = networkService.getSchedule()
+            if (schedule != null) {
+                return@withContext Result.Success(schedule)
+            } else {
+                return@withContext Result.Error(Exception("schedule is null"))
             }
         } catch (e: Exception) {
             return@withContext Result.Error(e)

@@ -16,10 +16,9 @@
 
 package com.zerowater.environment.data.source
 
-import com.zerowater.environment.data.Auth
-import com.zerowater.environment.data.Result
-import com.zerowater.environment.data.Token
-import com.zerowater.environment.data.Version
+import androidx.lifecycle.LiveData
+import com.zerowater.environment.Event
+import com.zerowater.environment.data.*
 
 /**
  * Interface to the data layer.
@@ -27,9 +26,13 @@ import com.zerowater.environment.data.Version
 interface Repository {
     suspend fun getVersion(): Result<Version>
 
-    suspend fun getAuthToken(auth: Auth): Result<Token>
+    suspend fun login(auth: Auth): Result<Token>
 
-    fun getAuthToken(): String?
+    suspend fun refreshToken(): Result<Token>
+
+    suspend fun getSchedule(): Result<Schedule>
+
+    fun getAccessToken(): String?
 
     fun getNetworkOperatorName(): String?
 
@@ -38,4 +41,8 @@ interface Repository {
     fun isIgnoringBatteryOptimizations(): Boolean
 
     fun checkSelfPermission(): Boolean
+
+    fun getIntentLiveData(): LiveData<Event<Result<String>>>
+
+    fun postIntentLiveData(type: Result<String>)
 }

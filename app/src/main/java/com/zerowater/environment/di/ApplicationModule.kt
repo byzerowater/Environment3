@@ -20,10 +20,14 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
+import androidx.lifecycle.MutableLiveData
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.zerowater.environment.BuildConfig
+import com.zerowater.environment.Event
+import com.zerowater.environment.data.Result
 import com.zerowater.environment.data.source.*
+import com.zerowater.environment.data.source.livedata.IntentLiveDataSource
 import com.zerowater.environment.data.source.local.SharedPreferencesCache
 import com.zerowater.environment.data.source.local.SharedPreferencesDataSource
 import com.zerowater.environment.data.source.remote.NetworkDataSource
@@ -39,7 +43,6 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import timber.log.Timber
 import java.io.IOException
 import java.security.SecureRandom
 import java.security.cert.CertificateException
@@ -97,6 +100,14 @@ class ApplicationModule {
     @Singleton
     @Provides
     fun provideSharedPreferences(context: Context): SharedPreferencesCache = SharedPreferencesCache(context, BuildConfig.APPLICATION_ID + ".SharedPreferencesCache")
+
+    @Singleton
+    @Provides
+    fun provideLiveDataSource(): LiveDataSource {
+        return IntentLiveDataSource(
+                MutableLiveData<Event<Result<String>>>()
+        )
+    }
 
     @Singleton
     @Provides
@@ -187,7 +198,7 @@ class ApplicationModule {
     @Singleton
     @Provides
     @Named("headerInterceptor")
-    fun provideHeaderInterceptor(context: Context, localDataSource: LocalDataSource): Interceptor {
+    fun provideHeaderInterceptor(localDataSource: LocalDataSource): Interceptor {
         return Interceptor { chain: Interceptor.Chain ->
             val original = chain.request()
             val headers = original.headers
@@ -195,10 +206,9 @@ class ApplicationModule {
                 val request = original.newBuilder().apply {
                     header("Content-Type", "application/json; charset=utf-8")
                     method(original.method, original.body)
-                    val authorization = localDataSource.getAuthToken()
+                    val authorization = localDataSource.getAccessToken()
                     authorization?.let {
-                        header("Authorization", authorization)
-                        Timber.d("authorization $authorization")
+                        header("Authorization", "Bearer $authorization")
                     }
                 }.build()
                 chain.proceed(request)

@@ -54,7 +54,7 @@ class SplashViewModel @Inject constructor(
             repository.getVersion().run {
                 val version = if (this is Success) this.data else null
                 version?.let {
-                    if (BuildConfig.VERSION_NAME.compareTo(it.version) < 0) {
+                    if (BuildConfig.VERSION_NAME.compareTo(it.version ?: "0") < 0) {
                         _version.value = version
                     } else {
                         navigationToNext()
@@ -68,7 +68,7 @@ class SplashViewModel @Inject constructor(
 
     fun navigationToNext() {
         navigation(
-                if (repository.getAuthToken().isNullOrBlank())
+                if (repository.getAccessToken().isNullOrBlank())
                     SplashNavigation.LOGIN
                 else
                     SplashNavigation.MAIN

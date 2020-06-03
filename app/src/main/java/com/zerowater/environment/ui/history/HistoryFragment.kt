@@ -28,8 +28,9 @@ import com.zerowater.environment.NavGraphDirections
 import com.zerowater.environment.R
 import com.zerowater.environment.data.Dialog
 import com.zerowater.environment.databinding.HistoryFragBinding
+import com.zerowater.environment.ui.dialog.DialogNavigation
+import com.zerowater.environment.ui.dialog.DialogType
 import com.zerowater.environment.ui.dialog.DialogViewModel
-import com.zerowater.environment.ui.dialog.DialogViewModel.DialogNavigation
 import com.zerowater.environment.ui.history.HistoryViewModel.HistoryNavigation
 import dagger.android.support.DaggerFragment
 import timber.log.Timber
@@ -88,7 +89,7 @@ class HistoryFragment : DaggerFragment() {
     }
 
     private fun navigateToDialog() {
-        val action = NavGraphDirections.actionDialog(Dialog("test", "test", "right"))
+        val action = NavGraphDirections.actionDialog(DialogType.GENERAL, Dialog("test", "test", "right"))
         findNavController().navigate(action)
     }
 }
