@@ -9,7 +9,7 @@ import com.zerowater.environment.data.source.LiveDataSource
 
 /**
  * IntentLiveDataSource
- * Class: ResourceDataSource
+ * Class: IntentLiveDataSource
  * Created by ZERO on 2020-05-27.
  * zero company Ltd
  * byzerowater@gmail.com

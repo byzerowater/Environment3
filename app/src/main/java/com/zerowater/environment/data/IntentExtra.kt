@@ -3,7 +3,7 @@ package com.zerowater.environment.data
 
 /**
  * Environment
- * Class: MoreModule
+ * Class: IntentExtra
  * Created by ZERO on 2020-06-04.
  * zero company Ltd
  * byzerowater@gmail.com

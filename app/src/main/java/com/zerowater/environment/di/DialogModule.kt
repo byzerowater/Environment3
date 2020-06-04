@@ -26,7 +26,7 @@ import dagger.multibindings.IntoMap
 
 /**
  * Environment
- * Class: HistoryDialogModule
+ * Class: DialogModule
  * Created by ZERO on 2020-05-23.
  * zero company Ltd
  * byzerowater@gmail.com
