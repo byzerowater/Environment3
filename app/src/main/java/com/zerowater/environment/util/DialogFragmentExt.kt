@@ -24,8 +24,8 @@ fun DialogFragment.initDialog() {
         it.window?.let {
             it.setBackgroundDrawableResource(R.color.transparent_000000_00)
         }
-        it.setCanceledOnTouchOutside(false)
     }
+    isCancelable = false
 }
 
 

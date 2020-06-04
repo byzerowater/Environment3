@@ -18,6 +18,10 @@ package com.zerowater.environment.ui.home
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.zerowater.environment.Event
+import com.zerowater.environment.data.ExtraType
+import com.zerowater.environment.data.IntentExtra
+import com.zerowater.environment.data.Result
 import com.zerowater.environment.data.source.Repository
 import javax.inject.Inject
 
@@ -35,4 +39,12 @@ class HomeViewModel @Inject constructor(
 
     private val _dataLoading = MutableLiveData<Boolean>()
     val dataLoading: LiveData<Boolean> = _dataLoading
+
+    val intentLiveData: LiveData<Event<Result<IntentExtra>>> = repository.getIntentLiveData()
+
+    fun push() {
+        repository.postIntentLiveData(Result.Success(IntentExtra(ExtraType.FCM, "pushTest")))
+    }
+
+
 }

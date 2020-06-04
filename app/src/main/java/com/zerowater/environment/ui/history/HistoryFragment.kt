@@ -89,7 +89,7 @@ class HistoryFragment : DaggerFragment() {
     }
 
     private fun navigateToDialog() {
-        val action = NavGraphDirections.actionDialog(DialogType.GENERAL, Dialog("test", "test", "right"))
+        val action = NavGraphDirections.actionDialog(DialogType.GENERAL, Dialog("test", "left", "right"))
         findNavController().navigate(action)
     }
 }

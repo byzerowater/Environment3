@@ -2,6 +2,7 @@ package com.zerowater.environment.data.source
 
 import androidx.lifecycle.LiveData
 import com.zerowater.environment.Event
+import com.zerowater.environment.data.IntentExtra
 import com.zerowater.environment.data.Result
 
 
@@ -14,6 +15,6 @@ import com.zerowater.environment.data.Result
  * Description:
  */
 interface LiveDataSource {
-    fun getIntentLiveData(): LiveData<Event<Result<String>>>
-    fun postIntentLiveData(data: Result<String>)
+    fun getIntentLiveData(): LiveData<Event<Result<IntentExtra>>>
+    fun postIntentLiveData(data: Result<IntentExtra>)
 }

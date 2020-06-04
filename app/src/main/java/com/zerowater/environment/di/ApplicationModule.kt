@@ -25,6 +25,7 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.zerowater.environment.BuildConfig
 import com.zerowater.environment.Event
+import com.zerowater.environment.data.IntentExtra
 import com.zerowater.environment.data.Result
 import com.zerowater.environment.data.source.*
 import com.zerowater.environment.data.source.livedata.IntentLiveDataSource
@@ -105,7 +106,7 @@ class ApplicationModule {
     @Provides
     fun provideLiveDataSource(): LiveDataSource {
         return IntentLiveDataSource(
-                MutableLiveData<Event<Result<String>>>()
+                MutableLiveData<Event<Result<IntentExtra>>>()
         )
     }
 

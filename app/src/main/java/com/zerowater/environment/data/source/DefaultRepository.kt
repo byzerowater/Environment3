@@ -89,11 +89,11 @@ class DefaultRepository @Inject constructor(
         return resourceDataSource.checkSelfPermission()
     }
 
-    override fun getIntentLiveData(): LiveData<Event<Result<String>>> {
+    override fun getIntentLiveData(): LiveData<Event<Result<IntentExtra>>> {
         return liveDataSource.getIntentLiveData()
     }
 
-    override fun postIntentLiveData(data: Result<String>) {
+    override fun postIntentLiveData(data: Result<IntentExtra>) {
         liveDataSource.postIntentLiveData(data)
     }
 

@@ -20,8 +20,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.zerowater.environment.R
+import com.zerowater.environment.data.Result
 import com.zerowater.environment.databinding.HomeFragBinding
 import dagger.android.support.DaggerFragment
 import timber.log.Timber
@@ -55,5 +57,24 @@ class HomeFragment : DaggerFragment() {
             lifecycleOwner = this@HomeFragment.viewLifecycleOwner
         }
         return view
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        viewModel.intentLiveData.observe(viewLifecycleOwner, Observer {
+            it.getContentIfNotHandled()?.let {
+
+                when (it) {
+                    is Result.Success -> {
+                        Timber.i(it.data.data)
+                    }
+                    is Result.Error -> {
+                        Timber.e(it.exception)
+                    }
+                }
+
+            }
+
+        })
     }
 }

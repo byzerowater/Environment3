@@ -42,7 +42,7 @@ interface Repository {
 
     fun checkSelfPermission(): Boolean
 
-    fun getIntentLiveData(): LiveData<Event<Result<String>>>
+    fun getIntentLiveData(): LiveData<Event<Result<IntentExtra>>>
 
-    fun postIntentLiveData(type: Result<String>)
+    fun postIntentLiveData(data: Result<IntentExtra>)
 }
