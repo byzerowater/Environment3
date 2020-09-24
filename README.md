@@ -14,8 +14,9 @@ The libraries and tools used include:
 - [Timber] (https://github.com/JakeWharton/timber)
 
 
-참조
-https://github.com/android/architecture-samples/tree/dev_dagger-android-reactive
+참고
+- [Android Architecture](https://github.com/android/architecture-samples/tree/dev_dagger-android-reactive)
 
+ 
 
  
