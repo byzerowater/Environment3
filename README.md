@@ -11,7 +11,7 @@ The libraries and tools used include:
 - coroutines
 - [Retrofit](http://square.github.io/retrofit/) and [OkHttp](https://github.com/square/okhttp)
 - [Dagger 2](http://google.github.io/dagger/)
-- [Timber] (https://github.com/JakeWharton/timber)
+- [Timber](https://github.com/JakeWharton/timber)
 
 
 참고
