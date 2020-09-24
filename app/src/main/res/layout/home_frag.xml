@@ -19,8 +19,6 @@
     tools:context=".ui.home.HomeFragment">
 
     <data>
-
-
         <variable
             name="viewmodel"
             type="com.zerowater.environment.ui.home.HomeViewModel" />

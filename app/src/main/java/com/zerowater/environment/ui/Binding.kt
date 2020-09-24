@@ -120,16 +120,16 @@ class RecyclerViewBindingAdapters {
         @JvmStatic
         @BindingAdapter("android:recyclerViewAdapter", "android:items")
         fun bindItem(recyclerView: RecyclerView, adapter: ListAdapter<Nothing, Nothing>?, dataList: List<Nothing>?) {
-            var adapter = adapter
+            var varAdapter = adapter
             val oldAapater = recyclerView.adapter
             if (oldAapater != null) {
-                adapter = oldAapater as ListAdapter<Nothing, Nothing>
+                varAdapter = oldAapater as ListAdapter<Nothing, Nothing>
             } else {
-                recyclerView.adapter = adapter
+                recyclerView.adapter = varAdapter
             }
 
             dataList?.let {
-                adapter?.submitList(dataList as List<Nothing>?)
+                varAdapter?.submitList(dataList as List<Nothing>?)
             }
         }
     }
@@ -151,7 +151,10 @@ class NestedScrollViewViewBindingAdapters {
         @JvmStatic
         @BindingAdapter("android:openKeyboard")
         fun setOpenKeyboard(nestedScrollView: NestedScrollView, isOpen: Boolean) {
-            if (isOpen) nestedScrollView.fullScroll(View.FOCUS_DOWN)
+            if (isOpen)
+                nestedScrollView.post(Runnable {
+                    nestedScrollView.scrollTo(0, nestedScrollView.bottom)
+                })
         }
     }
 }
@@ -216,7 +219,7 @@ class TextViewBindingAdapters {
                     Timber.e(e)
                 }
             }
-            view.text = parseDate ?: null
+            view.text = parseDate
         }
     }
 }
